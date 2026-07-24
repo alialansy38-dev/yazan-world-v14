@@ -2,41 +2,74 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>عالم اليازان V14 🌍</title>
+<title>عالم اليازان V14 - واتس متكامل</title>
 <script src="/socket.io/socket.io.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:#0a0a0f;color:#fff;min-height:100vh;display:flex;flex-direction:column}
-header{background:#15151f;padding:15px;text-align:center;border-bottom:2px solid #7c3aed}
-header h1{color:#a78bfa}header p{color:#888;font-size:12px}
-#login{position:fixed;inset:0;background:#0a0a0fe0;display:flex;align-items:center;justify-content:center;z-index:99}
-#loginBox{background:#1a1a2e;padding:30px;border-radius:15px;text-align:center;width:90%;max-width:320px;border:1px solid #7c3aed}
-#loginBox input{width:100%;padding:12px;border-radius:8px;border:none;margin:15px 0;background:#222;color:#fff;text-align:center;font-size:18px}
-#loginBox button{width:100%;padding:12px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-#chat{flex:1;display:flex;flex-direction:column;max-width:700px;width:100%;margin:0 auto}
-#top{padding:10px;background:#15151f;display:flex;justify-content:space-between}
-#messages{flex:1;padding:15px;overflow-y:auto;height:70vh}
-.msg{background:#1e1e32;padding:10px 14px;border-radius:12px;margin:8px 0;max-width:80%}
-.msg b{color:#a78bfa;font-size:13px}.msg span{font-size:11px;color:#666;display:block;margin-top:4px}
-.me{background:#2d1b69;margin-left:auto}
-#send{display:flex;padding:10px;background:#15151f;gap:8px;position:sticky;bottom:0}
-#send input{flex:1;padding:12px;border-radius:20px;border:none;background:#222;color:#fff}
-#send button{padding:12px 18px;background:#7c3aed;border:none;border-radius:20px;color:#fff;font-weight:bold}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#0a0a0f;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{background:#15151f;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #a78bfa}
+header h1{color:#a78bfa;font-size:18px} header p{color:#888;font-size:12px}
+#login{position:fixed;inset:0;background:#0a0a0f;z-index:999;display:flex;align-items:center;justify-content:center}
+#loginBox{background:#1a1a2e;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center;border:1px solid #a78bfa}
+#loginBox h2{color:#a78bfa;margin-bottom:15px}
+#loginBox input{width:100%;padding:14px;border-radius:10px;border:2px solid #333;background:#0a0a0f;color:#fff;font-size:16px;text-align:center;outline:none;margin-bottom:15px}
+#loginBox input:focus{border-color:#a78bfa}
+#loginBox button{width:100%;padding:14px;background:#a78bfa;color:#000;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+#top{padding:10px 15px;background:#15151f;display:flex;gap:10px;align-items:center;font-size:13px}
+#online{color:#00e676} #typing{color:#ffca28;font-size:12px;height:16px}
+#messages{flex:1;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:radial-gradient(circle at 50% 50%,#1a1a2e 0%,#0a0a0f 100%)}
+.msg{background:#1e1e32;padding:10px 14px;border-radius:12px;max-width:78%;line-height:1.4;animation:pop .2s}
+@keyframes pop{from{transform:scale(.8)}to{transform:scale(1)}}
+.msg b{color:#a78bfa;font-size:13px;display:block;margin-bottom:3px}
+.me{background:#2d1b69 !important;margin-right:auto;border-bottom-right-radius:2px}
+.other{background:#1e1e32;margin-left:auto;border-bottom-left-radius:2px}
+.time{font-size:10px;color:#888;float:left;margin-top:6px;margin-right:8px}
+#send{display:flex;padding:10px;background:#15151f;gap:10px}
+#send input{flex:1;padding:14px;border-radius:25px;border:none;background:#2a2a3a;color:#fff;outline:none;font-size:15px}
+#send button{padding:12px 20px;background:#a78bfa;border:none;border-radius:25px;color:#000;font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
-<header><h1>🌍 عالم اليازان V14</h1><p>متصل الآن: <span id="count">0</span> • يتحمل 100 شخص</p></header>
-<div id="login"><div id="loginBox"><h2>أدخل اسمك يا بطل</h2><input id="nameIn" placeholder="مثال: يزن"><button onclick="join()">دخول العالم 🚀</button></div></div>
-<div id="chat"><div id="messages"></div><div id="send"><input id="msgIn" placeholder="اكتب رسالة..."><button onclick="send()">إرسال</button></div></div>
+<header><h1>🌍 عالم اليازان V14</h1><p>واتس متكامل</p></header>
+
+<div id="login"><div id="loginBox">
+<h2>🚀 دخول العالم</h2>
+<input id="nameIn" placeholder="اكتب اسمك..." maxlength="12">
+<button onclick="join()">دخول 💬</button>
+<p style="margin-top:15px;color:#666;font-size:12px">يتحمل 100 شخص • واتساب خارق</p>
+</div></div>
+
+<div id="top"><span id="online">● متصل الآن: 1</span><span id="typing"></span></div>
+<div id="messages"></div>
+<div id="send"><input id="msgIn" placeholder="اكتب رسالة..." oninput="doTyping()" onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">إرسال</button></div>
+
 <script>
-let socket=io(),myName="";
-function join(){let n=document.getElementById('nameIn').value.trim();if(!n)return alert('اكتب اسمك');myName=n;document.getElementById('login').style.display='none';socket.emit('join',{name:n})}
-function send(){let i=document.getElementById('msgIn'),t=i.value.trim();if(!t)return;socket.emit('chat_message',{text:t});i.value=''}
-document.getElementById('msgIn').addEventListener('keypress',e=>{if(e.key==='Enter')send()});
-socket.on('online_count',c=>document.getElementById('count').textContent=c);
-socket.on('old_messages',arr=>arr.forEach(addMsg));
-socket.on('chat_message',addMsg);
-function addMsg(m){let d=document.createElement('div');d.className='msg'+(m.sender===myName?' me':'');d.innerHTML=`<b>${m.sender}</b>${m.text}<span>${m.time||''}</span>`;document.getElementById('messages').appendChild(d);document.getElementById('messages').scrollTop=99999}
+let socket,myName,myColor='#a78bfa';
+const colors=['#a78bfa','#00e676','#ffca28','#ff5252','#40c4ff','#ff79c6'];
+myColor=colors[Math.floor(Math.random()*colors.length)];
+const msgs=document.getElementById('messages');
+function join(){
+ myName=document.getElementById('nameIn').value.trim();
+ if(!myName) return alert('اكتب اسمك أول!');
+ document.getElementById('login').style.display='none';
+ socket=io();
+ socket.emit('join',{name:myName,color:myColor});
+ socket.on('message',addMsg);
+ socket.on('count',c=>document.getElementById('online').textContent='● متصل الآن: '+c+' • يتحمل 100');
+ socket.on('typing',d=>{ if(d.name!==myName){document.getElementById('typing').textContent=d.name+' يكتب...'; setTimeout(()=>document.getElementById('typing').textContent='',2000); } });
+ socket.on('history',arr=>arr.forEach(addMsg));
+}
+function addMsg(d){
+ const div=document.createElement('div');
+ div.className='msg '+(d.name===myName?'me':'other');
+ div.innerHTML=`<b style="color:${d.color}">${d.name}</b>${d.text}<span class="time">${new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</span>`;
+ msgs.appendChild(div); msgs.scrollTop=99999;
+}
+function sendMsg(){
+ const inp=document.getElementById('msgIn'); if(!inp.value.trim()) return;
+ socket.emit('message',{name:myName,color:myColor,text:inp.value}); inp.value='';
+}
+function doTyping(){ socket.emit('typing',{name:myName}); }
 </script>
 </body>
 </html>
