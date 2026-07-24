@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>عالم اليازان V14 🌍</title>
+<script src="/socket.io/socket.io.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0a0a0f;color:#fff;min-height:100vh;display:flex;flex-direction:column}
+header{background:#15151f;padding:15px;text-align:center;border-bottom:2px solid #7c3aed}
+header h1{color:#a78bfa}header p{color:#888;font-size:12px}
+#login{position:fixed;inset:0;background:#0a0a0fe0;display:flex;align-items:center;justify-content:center;z-index:99}
+#loginBox{background:#1a1a2e;padding:30px;border-radius:15px;text-align:center;width:90%;max-width:320px;border:1px solid #7c3aed}
+#loginBox input{width:100%;padding:12px;border-radius:8px;border:none;margin:15px 0;background:#222;color:#fff;text-align:center;font-size:18px}
+#loginBox button{width:100%;padding:12px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+#chat{flex:1;display:flex;flex-direction:column;max-width:700px;width:100%;margin:0 auto}
+#top{padding:10px;background:#15151f;display:flex;justify-content:space-between}
+#messages{flex:1;padding:15px;overflow-y:auto;height:70vh}
+.msg{background:#1e1e32;padding:10px 14px;border-radius:12px;margin:8px 0;max-width:80%}
+.msg b{color:#a78bfa;font-size:13px}.msg span{font-size:11px;color:#666;display:block;margin-top:4px}
+.me{background:#2d1b69;margin-left:auto}
+#send{display:flex;padding:10px;background:#15151f;gap:8px;position:sticky;bottom:0}
+#send input{flex:1;padding:12px;border-radius:20px;border:none;background:#222;color:#fff}
+#send button{padding:12px 18px;background:#7c3aed;border:none;border-radius:20px;color:#fff;font-weight:bold}
+</style>
+</head>
+<body>
+<header><h1>🌍 عالم اليازان V14</h1><p>متصل الآن: <span id="count">0</span> • يتحمل 100 شخص</p></header>
+<div id="login"><div id="loginBox"><h2>أدخل اسمك يا بطل</h2><input id="nameIn" placeholder="مثال: يزن"><button onclick="join()">دخول العالم 🚀</button></div></div>
+<div id="chat"><div id="messages"></div><div id="send"><input id="msgIn" placeholder="اكتب رسالة..."><button onclick="send()">إرسال</button></div></div>
+<script>
+let socket=io(),myName="";
+function join(){let n=document.getElementById('nameIn').value.trim();if(!n)return alert('اكتب اسمك');myName=n;document.getElementById('login').style.display='none';socket.emit('join',{name:n})}
+function send(){let i=document.getElementById('msgIn'),t=i.value.trim();if(!t)return;socket.emit('chat_message',{text:t});i.value=''}
+document.getElementById('msgIn').addEventListener('keypress',e=>{if(e.key==='Enter')send()});
+socket.on('online_count',c=>document.getElementById('count').textContent=c);
+socket.on('old_messages',arr=>arr.forEach(addMsg));
+socket.on('chat_message',addMsg);
+function addMsg(m){let d=document.createElement('div');d.className='msg'+(m.sender===myName?' me':'');d.innerHTML=`<b>${m.sender}</b>${m.text}<span>${m.time||''}</span>`;document.getElementById('messages').appendChild(d);document.getElementById('messages').scrollTop=99999}
+</script>
+</body>
+</html>
