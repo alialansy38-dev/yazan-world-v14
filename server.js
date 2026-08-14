@@ -1,23 +1,19 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-app.use(express.json());
+const express=require('express');
+const http=require('http');
+const {Server}=require('socket.io');
+const app=express();
+const server=http.createServer(app);
+const io=new Server(server,{cors:{origin:"*"}});
 app.use(express.static('public'));
-const YEMEN = {
-  TAIZ:{lat:13.5795,lng:44.0209},
-  SANAA:{lat:15.3694,lng:44.1910},
-  ADEN:{lat:12.7797,lng:45.0367},
-  HODEIDAH:{lat:14.7961,lng:42.9545},
-  MUKALLA:{lat:14.5425,lng:49.1242},
-  IBB:{lat:13.9660,lng:44.2050}
-};
+app.use(express.json());
+const YEMEN={TAIZ:{lat:13.5795,lng:44.021},SANAA:{lat:15.3694,lng:44.191},ADEN:{lat:12.8,lng:45.03},HODEIDAH:{lat:14.8,lng:42.95},MUKALLA:{lat:14.5,lng:49.1},IBB:{lat:13.97,lng:44.18}};
 let cars=new Map();
-app.get('/health',(req,res)=>{res.json({country:"YEMEN",cities:6,liveCars:cars.size,servers:4,status:"alive",edge:"KOYEB EDGE WORKING"})});
-app.get('/yemen',(req,res)=>{res.json(YEMEN)});
-app.get('/',(req,res)=>{res.sendFile(__dirname+'/public/index.html')});
-io.on('connection',s=>{s.on('updateLocation',d=>{cars.set(d.id,d);io.emit('cars',Array.from(cars.values()))})});
+app.get('/',(req,res)=>res.sendFile(__dirname+'/public/index.html'));
+app.get('/health',(req,res)=>res.json({country:'YEMEN',cities:6,cars:cars.size,status:'alive'}));
+app.get('/yemen',(req,res)=>res.json(YEMEN));
+io.on('connection',socket=>{
+ socket.on('update',d=>{cars.set(socket.id,d);io.emit('cars',Array.from(cars.values()))});
+ socket.on('disconnect',()=>{cars.delete(socket.id);io.emit('cars',Array.from(cars.values()))});
+});
 const PORT=process.env.PORT||8000;
-server.listen(PORT,'0.0.0.0',()=>console.log('Live '+PORT));
+server.listen(PORT,'0.0.0.0',()=>console.log('Live Yemen on '+PORT));
