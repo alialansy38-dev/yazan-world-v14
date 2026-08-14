@@ -1,136 +1,63 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
-app.use(express.static('public'));
+const express=require('express');
+const http=require('http');
+const {Server}=require('socket.io');
+const path=require('path');
+const cors=require('cors');
+const https=require('https');
+const app=express();
+const server=http.createServer(app);
+const io=new Server(server,{cors:{origin:"*"}});
+app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname,'public')));
 
-const YEMEN = {
-  TAIZ: { lat: 13.5795, lng: 44.0210, name: "تعز" },
-  SANAA: { lat: 15.3694, lng: 44.1910, name: "صنعاء" },
-  ADEN: { lat: 12.7797, lng: 45.0367, name: "عدن" }
-};
+let cars=new Map();
+let orders=[];
 
-let cars = new Map();
-
-// ================= مشواري V21 - خريطة تقرب + قمر صناعي + مناطق واضحة =================
-app.get('/mashwari', (req, res) => {
-  res.send(`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>مشواري - تعز</title>
-<link rel=stylesheet href=https://unpkg.com/leaflet@1.9.4/dist/leaflet.css>
-<script src=https://unpkg.com/leaflet@1.9.4/dist/leaflet.js></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui;background:#0f172a;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.header{background:#1e293b;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #22c55e}
-.logo{color:#22c55e;font-weight:900;font-size:16px}
-.badge{background:#22c55e;color:#000;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:900}
-#map{flex:1;width:100%}
-.controls{position:absolute;top:65px;right:10px;z-index:999;display:flex;flex-direction:column;gap:5px}
-.ctrl{background:#1e293b;color:#fff;border:1px solid #334155;padding:7px 10px;border-radius:8px;font-size:12px}
-.ctrl.green{background:#22c55e;color:#000;font-weight:900}
-.regions{position:absolute;top:65px;left:10px;z-index:999;display:flex;flex-direction:column;gap:4px}
-.reg{background:rgba(30,41,59,0.9);color:#fff;border:0;padding:5px 8px;border-radius:6px;font-size:11px;backdrop-filter:blur(5px)}
-.sheet{background:#1e293b;border-radius:18px 18px 0 0;padding:12px}
-.input{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px;width:100%;color:#fff;margin:4px 0;font-size:13px}
-.btn{background:#22c55e;color:#000;border:0;padding:12px;border-radius:12px;width:100%;font-weight:900;font-size:15px}
-.info{color:#22c55e;font-weight:bold;text-align:center;margin:5px 0;font-size:13px}
-.small{font-size:10px;color:#94a3b8;text-align:center}
-</style>
-</head>
-<body>
-<div class=header><div class=logo>🚕 مشواري - تعز</div><div class=badge>🛰️ تقريب 22x | دقة 1 متر</div></div>
-<div style=position:relative;flex:1;display:flex;flex-direction:column>
-<div id=map></div>
-<div class=controls>
-<button class="ctrl green" onclick="setSat()">🛰️ قمر صناعي</button>
-<button class=ctrl onclick="setMap()">🗺️ خريطة شوارع</button>
-<button class=ctrl onclick="map.zoomIn()">🔍+ تقريب</button>
-<button class=ctrl onclick="map.zoomOut()">🔍- تصغير</button>
-</div>
-<div class=regions>
-<button class=reg onclick="map.setView([13.5795,44.0209],17)">📍 جمال</button>
-<button class=reg onclick="map.setView([13.593542,43.986224],19)">🏘️ مدينة النور</button>
-<button class=reg onclick="map.setView([13.585,44.015],17)">🏫 الحصب</button>
-<button class=reg onclick="map.setView([13.595,44.03],17)">🕌 وادي القاضي</button>
-<button class=reg onclick="map.setView([13.57,44.01],16)">🏔️ صالة</button>
-</div>
-</div>
-<div class=sheet>
-<input class=input id=from placeholder="📍 من: اضغط على الخريطة - حدد باب بيتك بدقة" readonly>
-<input class=input id=to placeholder="🏁 إلى: اضغط على الخريطة" readonly>
-<div class=info id=price>اضغط على الخريطة لتحديد - صبّعين للتقريب القوي</div>
-<div class=small id=acc>خريطة حقيقية • تقريب حتى 22x • اسحب الدبوس لأدق نقطة 1 متر • زر القمر يوضح البيوت</div>
-<button class=btn onclick="orderNow()">اطلب مشواري الآن 📍</button>
-</div>
-<script>
-let map=L.map('map',{zoomControl:false,maxZoom:22,minZoom:10,zoomSnap:0.5}).setView([13.593542,43.986224],18);
-let osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:22,maxNativeZoom:19}).addTo(map);
-let sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22});
-let labels=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',{maxZoom:22});
-function setSat(){map.removeLayer(osm);map.addLayer(sat);map.addLayer(labels);}
-function setMap(){map.removeLayer(sat);map.removeLayer(labels);map.addLayer(osm);}
-L.control.scale({metric:true,imperial:false}).addTo(map);
-let pickup=null,dropoff=null,m1=null,m2=null;
-map.on('click',e=>{
-  let ll=e.latlng;
-  if(!pickup || (pickup && dropoff)){
-    pickup=ll;
-    if(m1) map.removeLayer(m1);
-    m1=L.marker(ll,{draggable:true}).addTo(map).bindPopup('📍 انطلاق<br>'+ll.lat.toFixed(6)+'<br><small>اسحب لتعديل 1 متر</small>').openPopup();
-    m1.on('dragend',ev=>{pickup=ev.target.getLatLng();from.value=pickup.lat.toFixed(6)+','+pickup.lng.toFixed(6);calc();});
-    dropoff=null; if(m2){map.removeLayer(m2);m2=null}
-    from.value=ll.lat.toFixed(6)+','+ll.lng.toFixed(6)+' مدينة النور'; to.value=''; price.innerText='الآن حدد الوصول';
-  }else{
-    dropoff=ll;
-    if(m2) map.removeLayer(m2);
-    m2=L.marker(ll,{draggable:true}).addTo(map).bindPopup('🏁 وصول').openPopup();
-    m2.on('dragend',ev=>{dropoff=ev.target.getLatLng();to.value=dropoff.lat.toFixed(6)+','+dropoff.lng.toFixed(6);calc();});
-    to.value=ll.lat.toFixed(6)+','+ll.lng.toFixed(6); calc();
-  }
-});
-function calc(){
-  if(!pickup||!dropoff) return;
-  let R=6371,dLa=(dropoff.lat-pickup.lat)*Math.PI/180,dLo=(dropoff.lng-pickup.lng)*Math.PI/180;
-  let a=Math.sin(dLa/2)**2+Math.cos(pickup.lat*Math.PI/180)*Math.cos(dropoff.lat*Math.PI/180)*Math.sin(dLo/2)**2;
-  let km=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-  let m=Math.round(km*1000);
-  let cost=800+km*150;
-  price.innerText=m+' متر | '+Math.round(cost)+' ر.ي | دقة 1 متر 📍 '+pickup.lat.toFixed(6)+','+pickup.lng.toFixed(6);
-}
-function orderNow(){
-  if(!pickup||!dropoff) return alert('حدد الانطلاق والوصول');
-  alert('✅ تم طلب مشواري\\n📍 من: '+pickup.lat.toFixed(6)+','+pickup.lng.toFixed(6)+'\\n🏁 إلى: '+dropoff.lat.toFixed(6)+','+dropoff.lng.toFixed(6)+'\\n'+price.innerText);
-}
-<\/script>
-</body>
-</html>`);
-});
-
-app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
-app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime(), cars: cars.size }));
-app.get('/ping', (req, res) => res.send('pong Yazan Taiz V21 ' + Date.now()));
-app.get('/yemen', (req, res) => res.json(YEMEN));
-
-io.on('connection', (socket) => {
-  socket.on('update', (d) => { cars.set(socket.id, d); io.emit('cars', Array.from(cars.values())); });
-  socket.on('disconnect', () => { cars.delete(socket.id); io.emit('cars', Array.from(cars.values())); });
-});
-
-// ================= منع النوم 24 ساعة =================
-const SERVERS = [
-  "https://yazan-world-v14-taiz.onrender.com",
-  "https://yazan-world-v14-sanaa.onrender.com",
-  "https://yazan-world-v14-aden.onrender.com"
+// ========== مانع النوم - سيرفرات ما تنام ==========
+const KEEP_ALIVE_URLS=[
+  'https://yazan-world-v14-taiz.onrender.com',
+  'https://yazan-app.onrender.com'
 ];
-setInterval(() => { fetch("https://yazan-world-v14-taiz.onrender.com/ping").catch(()=>{}); }, 5*60*1000);
-setInterval(() => { SERVERS.forEach(u => fetch(u+"/ping").catch(()=>{})); }, 10*60*1000);
+function keepAlive(){
+  const url=(process.env.RENDER_EXTERNAL_URL || KEEP_ALIVE_URLS[0]) + '/health';
+  https.get(url, r=>{ console.log('☕ KeepAlive Ping:', r.statusCode, new Date().toISOString()); }).on('error',()=>{});
+  // بديل ثاني
+  if(KEEP_ALIVE_URLS[1]) https.get(KEEP_ALIVE_URLS[1]+'/health',()=>{}).on('error',()=>{});
+}
+setInterval(keepAlive, 10*60*1000); // كل 10 دقايق
+app.get('/health',(req,res)=>res.json({status:'LIVE 🇾🇪', time:new Date().toISOString(), cars:cars.size, orders:orders.length, uptime:process.uptime()}));
+app.get('/ping',(req,res)=>res.send('PONG - Yazan LIVE'));
 
-const PORT = process.env.PORT || 8000;
-server.listen(PORT, '0.0.0.0', () => console.log("Mashwari V21 Taiz - Zoom 22x + Satellite LIVE " + PORT));
+// PWA - اسم يزن
+app.get('/manifest.json',(req,res)=>res.json({
+  name:"يزن", short_name:"يزن",
+  description:"مشواري - اليمن كامل - من صعدة للمهرة",
+  start_url:"/mashwari", display:"standalone",
+  background_color:"#0f172a", theme_color:"#22c55e",
+  icons:[{src:"https://cdn-icons-png.flaticon.com/512/3774/3774083.png",sizes:"512x512",type:"image/png"}]
+}));
+
+// ========== 1- مشواري اليمن كامل ==========
+app.get('/mashwari',(req,res)=>res.send(`<!DOCTYPE html><html lang=ar dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>مشواري - اليمن</title><link rel=manifest href=/manifest.json><meta name=theme-color content=#22c55e><link rel=stylesheet href=https://unpkg.com/leaflet@1.9.4/dist/leaflet.css><script src=https://unpkg.com/leaflet@1.9.4/dist/leaflet.js><\/script><script src=/socket.io/socket.io.js><\/script><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui;background:#0f172a;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden}.header{background:#1e293b;padding:10px;display:flex;justify-content:space-between;border-bottom:3px solid #22c55e}.logo{color:#22c55e;font-weight:900}.badge{background:#22c55e;color:#000;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:900}#map{flex:1}.controls{position:absolute;top:70px;right:8px;z-index:999;display:flex;flex-direction:column;gap:5px}.ctrl{background:#1e293b;color:#fff;border:1px solid #334155;padding:6px 9px;border-radius:8px;font-size:11px}.ctrl.green{background:#22c55e;color:#000;font-weight:900}.regions{position:absolute;top:70px;left:8px;z-index:999;display:flex;flex-direction:column;gap:3px;max-height:55vh;overflow-y:auto}.reg{background:rgba(30,41,59,0.95);color:#fff;border:1px solid #334155;padding:5px 7px;border-radius:6px;font-size:10px}.sheet{background:#1e293b;border-radius:18px 18px 0 0;padding:10px;max-height:48vh;overflow-y:auto}.input{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:9px;width:100%;color:#fff;margin:3px 0;font-size:12px}.btn{background:#22c55e;color:#000;border:0;padding:13px;border-radius:12px;width:100%;font-weight:900}.btnE{background:#ef4444;color:#fff;border:0;padding:9px;border-radius:10px;flex:1;font-weight:900;font-size:11px}.emBox{display:none;background:#450a0a;border:1px solid #ef4444;border-radius:12px;padding:8px;margin:5px 0}@keyframes pulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,197,94,0.7)}70%{transform:scale(1.15);box-shadow:0 0 0 15px rgba(34,197,94,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,197,94,0)}}@keyframes pulseRed{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(239,68,68,0.7)}70%{transform:scale(1.15);box-shadow:0 0 0 15px rgba(239,68,68,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(239,68,68,0)}}</style></head><body><div class=header><div class=logo>🚕 مشواري - اليمن 🇾🇪</div><div class=badge>👤 ينبض | اليمن كامل</div></div><div style=position:relative;flex:1><div id=map style=height:100%></div><div class=controls><button class="ctrl green" onclick="sat()">🛰️ قمر</button><button class=ctrl onclick="street()">🗺️ شوارع</button><button class=ctrl onclick="window.open('/track','_blank')">👁️ تتبع LIVE</button><button class=ctrl onclick="window.open('/driver','_blank')">🚕 سائق</button></div><div class=regions><button class=reg onclick="map.setView([15.5527,48.5164],6)">🇾🇪 اليمن كامل</button><button class=reg onclick="map.setView([15.3694,44.1910],13)">🏛️ صنعاء</button><button class=reg onclick="map.setView([12.7855,45.0187],12)">⚓ عدن</button><button class=reg onclick="map.setView([13.5795,44.0210],12)">🌄 تعز</button><button class=reg onclick="map.setView([13.9665,44.1658],12)">💚 إب</button><button class=reg onclick="map.setView([14.8008,42.9545],12)">🌊 الحديدة</button><button class=reg onclick="map.setView([13.3158,43.2475],12)">🎣 المخا</button><button class=reg onclick="map.setView([14.5407,49.1270],12)">🐟 المكلا</button><button class=reg onclick="map.setView([15.4700,45.3222],12)">🏜️ مأرب</button><button class=reg onclick="map.setView([16.9407,44.2147],11)">⛰️ صعدة</button><button class=reg onclick="map.setView([14.3794,44.4175],11)">🌿 ذمار</button><button class=reg onclick="map.setView([13.6878,44.8456],11)">🏞️ الضالع</button><button class=reg onclick="map.setView([13.5795,44.0209],16)">📍 جمال تعز</button><button class=reg onclick="map.setView([13.583,43.99],16)">📍 بير باشا</button><button class=reg onclick="map.setView([13.586,43.97],16)">📍 صينة</button></div></div><div class=sheet><input class=input id=from placeholder="👤 أنت هنا - ينبض" readonly><input class=input id=to placeholder="🏁 إلى أين في اليمن؟" readonly><div id=price style=color:#22c55e;text-align:center;font-weight:900;margin:5px 0;font-size:12px>🇾🇪 اختر محافظتك ثم حدد موقعك النابض 👤</div><div style="display:flex;gap:5px"><button id=emBtn class=btnE onclick="toggleEm()">🚨 طلب لأهلي (بيرباشا→صينة)</button><button id=normBtn class=btnE style="display:none;background:#1e293b;color:#94a3b8;border:1px solid #334155" onclick="toggleEm()">👤 رجوع</button></div><div id=emBox class=emBox><div style="color:#fca5a5;font-size:10px;font-weight:900;text-align:center">🚨 أنت في جمال - أهلك في مكان ثاني</div><input class=input id=emFrom placeholder="📍 أهلي في: بير باشا" readonly style="border-color:#ef4444"><input class=input id=emTo placeholder="🏁 يوديهم: صينة" readonly style="border-color:#ef4444"><input class=input id=emPhone placeholder="📞 رقم أهلك" type=tel style="border-color:#ef4444"></div><button class=btn id=orderBtn onclick="orderNow()">اطلب مشواري 👤💚 اليمن كامل</button><div style="font-size:9px;color:#64748b;text-align:center;margin-top:4px">☕ سيرفر ما ينام | تتبع LIVE من الاستلام | دقة 1 متر</div></div><script>let map=L.map('map',{maxZoom:22}).setView([15.5527,48.5164],6);let base=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22}).addTo(map);function sat(){map.removeLayer(base);base=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22}).addTo(map)}function street(){map.removeLayer(base);base=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:22}).addTo(map)}let passengerIcon=L.divIcon({className:'',html:'<div style="background:#22c55e;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:4px solid white;box-shadow:0 0 25px #22c55e;animation:pulse 1.5s infinite">👤</div>',iconSize:[50,50],iconAnchor:[25,25]});let familyIcon=L.divIcon({className:'',html:'<div style="background:#ef4444;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:4px solid white;box-shadow:0 0 25px #ef4444;animation:pulseRed 1.5s infinite">👨‍👩‍👧</div>',iconSize:[50,50],iconAnchor:[25,25]});let carIcon=L.divIcon({className:'',html:'<div style="background:#3b82f6;width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid white">🚕</div>',iconSize:[48,48],iconAnchor:[24,24]});let pickup=null,dropoff=null,m1=null,m2=null,emPickup=null,emDropoff=null,isEm=false;let socket=io();map.on('click',e=>{let ll=e.latlng;if(!isEm){if(!pickup||(pickup&&dropoff)){pickup=ll;if(m1)map.removeLayer(m1);m1=L.marker(ll,{draggable:true,icon:passengerIcon}).addTo(map).bindPopup('👤 أنت هنا').openPopup();m1.on('dragend',ev=>{pickup=ev.target.getLatLng();from.value=pickup.lat.toFixed(6)+','+pickup.lng.toFixed(6);calc()});dropoff=null;if(m2){map.removeLayer(m2);m2=null}from.value=ll.lat.toFixed(6)+','+ll.lng.toFixed(6);to.value='';price.innerText='الآن حدد الوصول 🏁'}else{dropoff=ll;if(m2)map.removeLayer(m2);m2=L.marker(ll,{draggable:true,icon:carIcon}).addTo(map).bindPopup('🏁 وصول').openPopup();m2.on('dragend',ev=>{dropoff=ev.target.getLatLng();to.value=dropoff.lat.toFixed(6)+','+dropoff.lng.toFixed(6);calc()});to.value=ll.lat.toFixed(6)+','+ll.lng.toFixed(6);calc()}}else{if(!emPickup){emPickup=ll;if(m1)map.removeLayer(m1);m1=L.marker(ll,{draggable:true,icon:familyIcon}).addTo(map).bindPopup('👨‍👩‍👧 أهلي').openPopup();document.getElementById('emFrom').value=ll.lat.toFixed(5)+','+ll.lng.toFixed(5);price.innerText='🚨 الآن حدد صينة'}else{emDropoff=ll;if(m2)map.removeLayer(m2);m2=L.marker(ll,{draggable:true,icon:carIcon}).addTo(map).bindPopup('🏁 صينة').openPopup();document.getElementById('emTo').value=ll.lat.toFixed(5)+','+ll.lng.toFixed(5);let R=6371,dLa=(emDropoff.lat-emPickup.lat)*Math.PI/180,dLo=(emDropoff.lng-emPickup.lng)*Math.PI/180;let a=Math.sin(dLa/2)**2+Math.cos(emPickup.lat*Math.PI/180)*Math.cos(emDropoff.lat*Math.PI/180)*Math.sin(dLo/2)**2;let km=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));price.innerText='🚨 '+Math.round(km*1000)+'م | '+Math.round(800+km*150)+' ر.ي'}}});function calc(){if(!pickup||!dropoff)return;let R=6371,dLa=(dropoff.lat-pickup.lat)*Math.PI/180,dLo=(dropoff.lng-pickup.lng)*Math.PI/180;let a=Math.sin(dLa/2)**2+Math.cos(pickup.lat*Math.PI/180)*Math.cos(dropoff.lat*Math.PI/180)*Math.sin(dLo/2)**2;let km=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));price.innerText=Math.round(km*1000)+'م | '+Math.round(800+km*150)+' ر.ي | 👤 ينبض'}function toggleEm(){isEm=!isEm;document.getElementById('emBox').style.display=isEm?'block':'none';document.getElementById('emBtn').style.display=isEm?'none':'block';document.getElementById('normBtn').style.display=isEm?'block':'none';document.getElementById('orderBtn').innerText=isEm?'🚨 اطلب لأهلي':'اطلب مشواري 👤💚';document.getElementById('orderBtn').style.background=isEm?'#ef4444':'#22c55e';if(isEm){pickup=null;dropoff=null;emPickup=null;emDropoff=null;if(m1)map.removeLayer(m1);if(m2)map.removeLayer(m2);from.value='';to.value='';price.innerText='🚨 حدد أهلك'}else{emPickup=null;emDropoff=null;if(m1)map.removeLayer(m1);if(m2)map.removeLayer(m2);price.innerText='👤 حدد موقعك'}}function orderNow(){if(isEm){if(!emPickup||!emDropoff)return alert('🚨 حدد المكانين');let ph=document.getElementById('emPhone').value;let o={type:'emergency',from:emPickup,to:emDropoff,phone:ph,time:Date.now()};socket.emit('newOrder',o);localStorage.setItem('lastOrder',JSON.stringify(o));alert('🚨 طلب اضطراري - السائق يتحرك LIVE');window.open('/track?mode=em','_blank')}else{if(!pickup||!dropoff)return alert('حدد الموقعين');let o={type:'normal',from:pickup,to:dropoff,time:Date.now()};socket.emit('newOrder',o);localStorage.setItem('lastOrder',JSON.stringify(o));alert('✅ طلبك - السائق جاي LIVE');window.open('/track','_blank')}}<\/script></body></html>`));
+
+// ========== 2- Driver - يشوف نفسه ==========
+app.get('/driver',(req,res)=>res.send(`<!DOCTYPE html><html dir=rtl lang=ar><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://unpkg.com/leaflet/dist/leaflet.css><script src=https://unpkg.com/leaflet/dist/leaflet.js><\/script><script src=/socket.io/socket.io.js><\/script><style>body{margin:0;background:#0f172a;color:#fff;height:100vh;display:flex;flex-direction:column}#map{flex:1}.h{background:#22c55e;color:#000;padding:10px;font-weight:900;text-align:center}.info{background:#1e293b;padding:10px;text-align:center}.b{background:#22c55e;border:0;padding:12px;border-radius:10px;width:100%;font-weight:900}</style></head><body><div class=h>🚕 سائق اليمن - تشوف تقدمك</div><div id=map></div><div class=info><div id=status>☕ سيرفر ما ينام - بانتظار طلب...</div><button class=b onclick="start()">▶️ ابدأ GPS LIVE - ما ينام</button></div><script>let map=L.map('map').setView([15.5527,48.5164],6);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22}).addTo(map);let socket=io();let me=null,client=null;let myIcon=L.divIcon({html:'<div style="background:#3b82f6;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid white">🚕</div>',iconSize:[48,48]});let pIcon=L.divIcon({html:'<div style="background:#22c55e;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:4px solid white">👤</div>',iconSize:[50,50]});socket.on('order',o=>{let ll=o.from;if(client)map.removeLayer(client);client=L.marker([ll.lat,ll.lng],{icon:pIcon}).addTo(map).bindPopup(o.type==='emergency'?'🚨 اضطراري بيرباشا':'👤 راكب').openPopup();status.innerText=(o.type==='emergency'?'🚨 اضطراري: ':'👤 عادي: ')+ll.lat.toFixed(4)+' - روح له الآن';map.setView([ll.lat,ll.lng],16)});function start(){navigator.geolocation.watchPosition(p=>{let ll=[p.coords.latitude,p.coords.longitude];if(!me)me=L.marker(ll,{icon:myIcon}).addTo(map);else me.setLatLng(ll);if(client){let d=map.distance(ll,client.getLatLng());status.innerText='تتقدم: باقي '+Math.round(d)+'م | LIVE ما ينام';}socket.emit('update',{id:'driver-yazan-'+Math.random(),lat:ll[0],lng:ll[1]});},{},{enableHighAccuracy:true})}<\/script></body></html>`));
+
+// ========== 3- Track - تتبع من الاستلام ==========
+app.get('/track',(req,res)=>res.send(`<!DOCTYPE html><html dir=rtl lang=ar><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://unpkg.com/leaflet/dist/leaflet.css><script src=https://unpkg.com/leaflet/dist/leaflet.js><\/script><script src=/socket.io/socket.io.js><\/script><style>body{margin:0;background:#0f172a;color:#fff;height:100vh;display:flex;flex-direction:column}#map{flex:1}.h{background:#1e293b;padding:10px;color:#22c55e;font-weight:900;text-align:center}.info{background:#1e293b;padding:10px;text-align:center;color:#22c55e;font-weight:900;font-size:13px}</style></head><body><div class=h>👁️ تتبع LIVE - من الاستلام حتى الوصول - ما ينام</div><div id=map></div><div class=info id=info>🚕 بانتظار السائق يستلم...<br>من أول قبول بتشوفه يتحرك LIVE</div><script>let map=L.map('map').setView([15.5527,48.5164],6);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22}).addTo(map);let youIcon=L.divIcon({html:'<div style="background:#22c55e;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:4px solid white;animation:pulse 1.5s infinite">👤</div><style>@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}</style>',iconSize:[50,50]});let carIcon=L.divIcon({html:'<div style="background:#3b82f6;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;border:3px solid white">🚕</div>',iconSize:[48,48]});let last=JSON.parse(localStorage.getItem('lastOrder')||'null');let you=last?L.marker([last.from.lat,last.from.lng],{icon:youIcon}).addTo(map).bindPopup('👤').openPopup():L.marker([15.3694,44.1910],{icon:youIcon}).addTo(map);if(last)map.setView([last.from.lat,last.from.lng],16);let car=null;let socket=io();socket.on('cars',cs=>{if(cs.length>0){let c=cs[cs.length-1];let ll=[c.lat,c.lng];if(!car)car=L.marker(ll,{icon:carIcon}).addTo(map).bindPopup('🚕').openPopup();else car.setLatLng(ll);let d=map.distance(ll,you.getLatLng());document.getElementById('info').innerHTML='🚕 السائق: '+Math.round(d)+'م | ⏱️ '+Math.ceil(d/60)+'د | LIVE ما ينام';}});socket.on('orderAccepted',()=>{document.getElementById('info').innerHTML='✅ استلم الطلب - جايك LIVE الآن'});<\/script></body></html>`));
+
+app.get('/',(req,res)=>res.redirect('/mashwari'));
+
+io.on('connection',s=>{
+  s.on('update',d=>{cars.set(d.id,{...d,time:Date.now()}); io.emit('cars',[...cars.values()]);});
+  s.on('newOrder',o=>{orders.push(o); io.emit('order',o); io.emit('orderAccepted'); console.log('NEW ORDER',o.type);});
+});
+
+const PORT=process.env.PORT||3000;
+server.listen(PORT,()=>{
+  console.log('🇾🇪 Yazan اليمن كامل LIVE on '+PORT);
+  keepAlive();
+  // سيرفر بديل - إذا وقف واحد الثاني يشتغل
+  console.log('☕ Anti-Sleep + Backup Servers ACTIVE');
+});
