@@ -7,26 +7,17 @@ const io = new Server(server, { cors: { origin: "*" } });
 app.use(express.json());
 app.use(express.static('public'));
 const YEMEN = {
-TAIZ:{lat:13.578,lng:44.021,name:'تعز',code:'TZ'},
-SANAA:{lat:15.369,lng:44.191,name:'صنعاء',code:'SA'},
-ADEN:{lat:12.779,lng:45.036,name:'عدن',code:'AD'},
-HODEIDAH:{lat:14.797,lng:42.954,name:'الحديدة',code:'HD'},
-MUKALLA:{lat:14.54,lng:49.124,name:'المكلا',code:'MK'},
-IBB:{lat:13.968,lng:44.172,name:'إب',code:'IB'}
+  TAIZ:{lat:13.5795,lng:44.0209},
+  SANAA:{lat:15.3694,lng:44.1910},
+  ADEN:{lat:12.7797,lng:45.0367},
+  HODEIDAH:{lat:14.7961,lng:42.9545},
+  MUKALLA:{lat:14.5425,lng:49.1242},
+  IBB:{lat:13.9660,lng:44.2050}
 };
-const cars=new Map();
-app.get('/health',(req,res)=>res.json({country:'YEMEN اليمن',cities:6,liveCars:cars.size,servers:4,status:'alive'}));
-app.get('/yemen/cities',(req,res)=>res.json(YEMEN));
-app.post('/yemen/nearest',(req,res)=>res.json({total:cars.size,nearest:[...cars.values()].slice(0,5)}));
-app.get('/yemen/cars',(req,res)=>res.json([...cars.values()]));
-io.on('connection',(socket)=>{
-socket.on('yemen:car:location',(d)=>{
-const car={...d,lastUpdate:Date.now(),cityName:YEMEN[d.city]?.name||d.city};
-cars.set(d.driverId,car);
-io.emit('yemen:all:cars',[...cars.values()]);
-io.to('track:'+d.driverId).emit('yemen:car:live',car);
-});
-});
-app.get('/',(req,res)=>res.send(`<h1>🇾🇪 اطلبني اليمن</h1><p>${Object.values(YEMEN).map(c=>c.name).join(' - ')}</p><p>سيارات: ${cars.size}</p>`));
+let cars=new Map();
+app.get('/health',(req,res)=>{res.json({country:"YEMEN",cities:6,liveCars:cars.size,servers:4,status:"alive",edge:"KOYEB EDGE WORKING"})});
+app.get('/yemen',(req,res)=>{res.json(YEMEN)});
+app.get('/',(req,res)=>{res.sendFile(__dirname+'/public/index.html')});
+io.on('connection',s=>{s.on('updateLocation',d=>{cars.set(d.id,d);io.emit('cars',Array.from(cars.values()))})});
 const PORT=process.env.PORT||8000;
-server.listen(PORT,()=>console.log('YEMEN '+PORT));
+server.listen(PORT,'0.0.0.0',()=>console.log('Live '+PORT));
