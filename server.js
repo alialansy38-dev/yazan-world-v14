@@ -431,44 +431,10 @@ function logout(){
   location.href='/';
 }
 
-
-function goRole(r){
-  selectedRole=r;
-  document.getElementById('roleCard').style.display='none';
-  document.getElementById('loginCard').style.display='block';
-  document.getElementById('loginTitle').innerText=r==='driver'?'🚕 سائق - تسجيل مرة واحدة فقط':'👤 راكب - تسجيل مرة واحدة فقط';
-  document.getElementById('driverExtra').style.display=r==='driver'?'block':'none';
-  document.getElementById('loginBtn').className='btn '+(r==='driver'?'driver':'rider');
-}
-function backRole(){document.getElementById('loginCard').style.display='none'; document.getElementById('roleCard').style.display='block';}
-async function register(){
-  try{
-    let n=document.getElementById('name')?.value?.trim()||'';
-    let p=document.getElementById('phone')?.value?.trim()||'';
-    let agree=document.getElementById('agreeRules')?.checked;
-    if(n.length<3){alert('اكتب اسمك الرباعي'); return;}
-    if(p.length<7){alert('رقم الجوال قصير'); return;}
-    if(!agree){alert('يجب الموافقة على قوانين يزن - علم على المربع'); return;}
-    localStorage.setItem('temp_name',n); localStorage.setItem('temp_phone',p); localStorage.setItem('temp_role',selectedRole);
-    localStorage.setItem('temp_driverPhoto',driverPhotoBase64); localStorage.setItem('temp_carPhoto',carPhotoBase64);
-    localStorage.setItem('temp_carModel',document.getElementById('carModel')?.value||''); 
-    localStorage.setItem('temp_carColor',document.getElementById('carColor')?.value||'');
-    localStorage.setItem('yazan_agreed_rules','yes');
-    document.getElementById('loginCard').style.display='none';
-    document.getElementById('codeCard').style.display='block';
-    document.getElementById('codePhone').innerText=p;
-    fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json','x-device-id':DEVICE_ID},body:JSON.stringify({name:n,phone:p,role:selectedRole,car:document.getElementById('carNo')?.value||'',deviceId:DEVICE_ID,driverPhoto:driverPhotoBase64,carPhoto:carPhotoBase64,carModel:document.getElementById('carModel')?.value||'',carColor:document.getElementById('carColor')?.value||''})}).catch(()=>{});
-  }catch(e){ alert('خطأ: '+e.message); }
-}
-function verify(){
-  let c=document.getElementById('code')?.value?.trim()||'';
-  if(c!=='' && c!=='1234'){alert('الكود خطأ - اكتب 1234'); return;}
-  let role=localStorage.getItem('temp_role'); let nm=localStorage.getItem('temp_name'); let ph=localStorage.getItem('temp_phone');
-  if(!role||!nm||!ph){ alert('انتهت الجلسة'); location.href='/'; return; }
-  localStorage.setItem('yazan_role',role); localStorage.setItem('yazan_user',JSON.stringify({name:nm,phone:ph,role,deviceId:DEVICE_ID})); localStorage.setItem('yazan_first_time','yes'); localStorage.setItem('yazan_agreed_rules','yes');
-  window.location.href=role==='driver'?'/driver':'/mashwari';
-}
-
+function goRole(r){let a=localStorage.getItem('yazan_agreed_rules'); if(!a){ if(confirm('📜 قوانين يزن V16 🔐\\n• تسجيل مرة واحدة فقط\\n• بعدها دخول تلقائي بدون تسجيل\\n• تقدر تفعل كلمة سر خاصة من داخل التطبيق\\nموافق؟')){ location.href='/rules'; return; } else return; } selectedRole=r; roleCard.style.display='none'; loginCard.style.display='block'; loginTitle.innerText=r==='driver'?'🚕 سائق 🔐 - تسجيل مرة واحدة فقط':'👤 راكب 🔐 - تسجيل مرة واحدة فقط'; driverExtra.style.display=r==='driver'?'block':'none'; loginBtn.className='btn '+(r==='driver'?'driver':'rider');}
+function backRole(){loginCard.style.display='none';roleCard.style.display='block';}
+async function register(){let n=name.value.trim();let p=phone.value.trim();if(n.length<3)return alert('الاسم');if(p.length<7)return alert('الجوال');if(!agreeRules.checked)return alert('وافق على القوانين - تسجيل مرة واحدة');localStorage.setItem('temp_name',n);localStorage.setItem('temp_phone',p);localStorage.setItem('temp_role',selectedRole);localStorage.setItem('temp_driverPhoto',driverPhotoBase64);localStorage.setItem('temp_carPhoto',carPhotoBase64);localStorage.setItem('temp_carModel',carModel?.value||'');localStorage.setItem('temp_carColor',carColor?.value||'');loginCard.style.display='none';codeCard.style.display='block';codePhone.innerText=p;try{await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json','x-device-id':DEVICE_ID},body:JSON.stringify({name:n,phone:p,role:selectedRole,car:carNo?.value||'',deviceId:DEVICE_ID,driverPhoto:driverPhotoBase64,carPhoto:carPhotoBase64,carModel:carModel?.value||'',carColor:carColor?.value||''})});}catch(e){}}
+function verify(){if(code.value.trim()!=='1234'&&code.value.trim()!=='')return alert('جرب 1234');let role=localStorage.getItem('temp_role');let nm=localStorage.getItem('temp_name');let ph=localStorage.getItem('temp_phone');localStorage.setItem('yazan_role',role);localStorage.setItem('yazan_user',JSON.stringify({name:nm,phone:ph,role,deviceId:DEVICE_ID}));localStorage.setItem('yazan_first_time','yes');window.location.href=role==='driver'?'/driver':'/mashwari';}
 <\/script></body></html>`));
 
 function appPage(role){
@@ -621,5 +587,14 @@ fetch('/api/user-password/'+user.phone).then(r=>r.json()).then(data=>{
 <\/script></body></html>`;
 }
 
+
+// ========== V16 - مسارات التطبيق - إصلاح Cannot GET /mashwari ==========
+app.get('/driver',(req,res)=>res.send(appPage('driver')));
+app.get('/mashwari',(req,res)=>res.send(appPage('rider')));
+app.get('/rider',(req,res)=>res.send(appPage('rider')));
+app.get('/track',(req,res)=>res.send(appPage('rider')));
+app.get('/mashwary',(req,res)=>res.send(appPage('rider'))); // احتياطي للإملاء
+
 const PORT=process.env.PORT||3000;
 server.listen(PORT,()=>{console.log('V16 ONE-TIME LOGIN + USER PASSWORD READY '+PORT); keepAlive();});
+
