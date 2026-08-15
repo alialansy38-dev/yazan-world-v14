@@ -152,10 +152,64 @@ app.post('/api/admin/set-password',(req,res)=>{
   res.json({ok:true, enabled:SETTINGS.adminPasswordEnabled, message: enable? 'تم تفعيل كلمة السر' : 'تم إلغاء كلمة السر'});
 });
 
-app.get('/rules',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>قوانين يزن</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:650px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.btn{border:0;border-radius:12px;padding:14px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><h1 style="color:#22c55e;text-align:center">📜 قوانين يزن V16 🔐 دخول مرة واحدة + كلمة سر خاصة</h1>
-<div class=goldCard><div style="text-align:center"><div style="font-size:28px">🔐📸🏆💬</div><div style="font-size:14px;font-weight:900;color:#fbbf24">V16 - تسجيل مرة واحدة + كلمة سر خاصة للراكب والسائق</div><div style="font-size:11px;color:#fde68a">• الشخص الجديد يسجل مرة واحدة فقط<br>• بعدها يدخل تلقائياً بدون تسجيل دخول - مباشرة للتطبيق<br>• يقدر يفعل كلمة سر خاصة فيه من الإعدادات<br>• إذا فعل كلمة السر → المرة الجاية يطلب كلمة السر فقط (4 أرقام)<br>• إذا ما فعلها → يدخل تلقائياً بدون أي كلمة سر</div></div></div>
-<div class=card><div style="background:#022c22;border:1px solid #16a34a;border-radius:10px;padding:10px;margin:6px 0;font-size:12px"><div style="color:#22c55e;font-weight:900">🔐 كلمة السر الخاصة - للراكب والسائق:</div><div style="font-size:11px;margin-top:4px">• الراكب: يقدر يفعل كلمة سر لحماية حسابه وطلباته<br>• السائق: يقدر يفعل كلمة سر لحماية رزقه وتقييماته<br>• كلمة السر خاصة بكل شخص - 4 أرقام أو أكثر<br>• تفعيل اختياري من الإعدادات داخل التطبيق</div></div></div>
-<button class="btn green" onclick="localStorage.setItem('yazan_agreed_rules','yes'); location.href='/'">✅ أوافق - توكل على الله</button></body></html>`));
+app.get('/rules',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>قوانين يزن V16</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:650px;margin:auto;min-height:100vh}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.greenCard{background:#022c22;border:2px solid #16a34a;border-radius:16px;padding:16px;margin:10px 0}.btn{border:0;border-radius:12px;padding:16px;width:100%;font-weight:900;margin:8px 0;font-size:14px;cursor:pointer}.green{background:#22c55e;color:#000}.dark{background:#1e293b;color:#fff} li{margin:8px 0;line-height:1.6}</style></head><body>
+<h1 style="color:#22c55e;text-align:center;margin:10px 0">🔐📜 قوانين يزن V16 📜🔐</h1>
+<h2 style="color:#fbbf24;text-align:center">دخول مرة واحدة + كلمة سر خاصة</h2>
+
+<div class=goldCard>
+<div style="text-align:center"><div style="font-size:32px">🔐📸🏆💬⭐</div><div style="font-size:15px;font-weight:900;color:#fbbf24;margin:8px 0">V16 - نظام الدخول الجديد</div></div>
+<ul style="font-size:12px;color:#fde68a;text-align:right;list-style:none;padding:0">
+<li>✅ 1. الشخص الجديد يسجل مرة واحدة فقط في حياته - اسمه ورقمه ونوع السيارة</li>
+<li>✅ 2. بعد التسجيل، كل مرة يفتح التطبيق يدخل تلقائياً مباشرة بدون أي تسجيل</li>
+<li>✅ 3. لا يوجد كود كل مرة - فقط أول مرة كود 1234 وبعدها دخول تلقائي مدى الحياة</li>
+<li>✅ 4. يقدر يفعل كلمة سر خاصة فيه من الإعدادات داخل التطبيق (اختياري)</li>
+<li>✅ 5. إذا فعل كلمة السر → المرة الجاية يطلب كلمة السر فقط (4 أرقام) مو تسجيل كامل</li>
+<li>✅ 6. إذا ما فعل كلمة السر → يدخل تلقائياً بدون أي كلمة سر - أسهل شيء</li>
+</ul>
+</div>
+
+<div class=greenCard>
+<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center;margin-bottom:8px">🔐 كلمة السر الخاصة - للراكب والسائق</div>
+<ul style="font-size:12px;color:#bbf7d0;text-align:right;list-style:none;padding:0">
+<li>👤 <b>الراكب:</b> يقدر يفعل كلمة سر لحماية حسابه وطلباته وعنوان بيته - 4 أرقام فقط</li>
+<li>🚕 <b>السائق:</b> يقدر يفعل كلمة سر لحماية رزقه وتقييماته وصوره - 4 أرقام فقط</li>
+<li>🔑 كلمة السر خاصة بكل شخص - كل واحد كلمة سره مختلفة</li>
+<li>🔓 تفعيل اختياري - مو إجباري - من الإعدادات داخل التطبيق</li>
+<li>❓ نسيت كلمة السر؟ اضغط تسجيل خروج وادخل بحساب آخر بنفس الرقم</li>
+</ul>
+</div>
+
+<div class=card>
+<div style="font-size:14px;font-weight:900;color:#fbbf24;text-align:center">📸🏆 لوحة الشرف والصور</div>
+<ul style="font-size:11px;color:#94a3b8;text-align:right">
+<li>• السائق يرفع صورته وصورة سيارته (اختياري)</li>
+<li>• الراكب يقيّم السائق نجوم + تعليق</li>
+<li>• أفضل 3 سائقين يظهرون في لوحة الشرف</li>
+<li>• بطل السنة يحصل مجاني مدى الحياة 💎</li>
+</ul>
+</div>
+
+<div class=card>
+<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center">🚕 قوانين عامة - يزن مشواري اليمن</div>
+<ul style="font-size:11px;color:#cbd5e1;text-align:right">
+<li>• من جمال تعز إلى كل اليمن - تعز، صنعاء، عدن، إب، الحديدة، المكلا</li>
+<li>• الأمان أولاً - سعر يرضي الطرفين إن شاء الله</li>
+<li>• احترام متبادل بين الراكب والسائق</li>
+<li>• أي إساءة - شكوى وحظر فوري</li>
+<li>• يزن وسيط - المسؤولية على الطرفين</li>
+</ul>
+</div>
+
+<div style="background:#000;border:2px solid #22c55e;border-radius:12px;padding:12px;margin:12px 0;text-align:center">
+<div style="color:#22c55e;font-weight:900">✨ V16 جديد - تسجيل مرة واحدة فقط!</div>
+<div style="font-size:11px;color:#94a3b8;margin-top:4px">سجل مرة، ادخل طول عمرك تلقائياً<br>وتقدر تفعل كلمة سر خاصة تحميك 🔐</div>
+</div>
+
+<button class="btn green" onclick="localStorage.setItem('yazan_agreed_rules','yes'); location.href='/'">✅ أوافق على القوانين - توكل على الله - دخول</button>
+<button class="btn dark" onclick="location.href='/'">⬅ رجوع للرئيسية</button>
+
+<div style="text-align:center;color:#334155;font-size:10px;margin-top:20px">يزن V16.2 - دخول مرة واحدة + كلمة سر خاصة - 2025</div>
+</body></html>`));
 app.get('/complaint',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>شكوى</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:14px;max-width:520px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px}.input{background:#020617;border:1px solid #334155;padding:12px;border-radius:10px;color:#fff;width:100%}.btn{border:0;border-radius:12px;padding:14px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><div class=card><h3 style="color:#22c55e;text-align:center">🚨 شكوى</h3><input class=input id=target placeholder="رقم المشتكى عليه"><textarea class=input id=text rows=3 placeholder="شرح"></textarea><button class="btn green" onclick="fetch('/api/complaints',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({targetPhone:target.value,text:text.value,time:Date.now()})}).then(()=>{alert('✅ تم'); location.href='/';})">✅ إرسال</button></div></body></html>`));
 app.get('/awards',(req,res)=>res.send(`<!DOCTYPE html><html dir=rtl lang=ar><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>لوحة الشرف 📸🏆</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:750px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.photoBox{width:60px;height:60px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #fbbf24;overflow:hidden}.photoBox img{width:100%;height:100%;object-fit:cover}.btn{border:0;border-radius:12px;padding:12px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><h1 style="color:#fbbf24;text-align:center">📸🏆 لوحة الشرف بالصور - V16</h1><div id=topDrivers>تحميل...</div><button class="btn green" onclick="location.href='/'">⬅ الرئيسية</button><script>
 function loadTop(){fetch('/api/ratings/drivers').then(r=>r.json()).then(list=>{ document.getElementById('topDrivers').innerHTML=list.map((d,i)=>{ let rank=i===0?'🥇 بطل السنة 💎':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let badge=d.badges.includes('free_life')?'💎 مجاني مدى الحياة':d.badges.includes('legend')?'👑 أسطوري':'🏆 مميز'; let driverPhoto=d.photos?.driverPhoto? '<img src="'+d.photos.driverPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '👤'; let carPhoto=d.photos?.carPhoto? '<img src="'+d.photos.carPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '🚕'; return '<div style="background:#020617;border-radius:12px;padding:12px;margin:8px 0;border:2px solid '+(i===0?'#fbbf24':'#1e293b')+'"><div style="display:flex;gap:10px;align-items:center"><div style="display:flex;gap:6px"><div class=photoBox>'+driverPhoto+'</div><div class=photoBox style="border-color:#16a34a">'+carPhoto+'</div></div><div style=flex:1><b>'+rank+' '+(d.name||d.id)+'</b><br><span style=color:#fbbf24>⭐ '+d.avg.toFixed(2)+' ('+d.count+')</span><br><span style=font-size:11px;color:#22c55e>'+badge+'</span></div></div></div>'; }).join(''); });}
