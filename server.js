@@ -597,4 +597,3 @@ app.get('/mashwary',(req,res)=>res.send(appPage('rider'))); // احتياطي ل
 
 const PORT=process.env.PORT||3000;
 server.listen(PORT,()=>{console.log('V16 ONE-TIME LOGIN + USER PASSWORD READY '+PORT); keepAlive();});
-
