@@ -152,253 +152,10 @@ app.post('/api/admin/set-password',(req,res)=>{
   res.json({ok:true, enabled:SETTINGS.adminPasswordEnabled, message: enable? 'تم تفعيل كلمة السر' : 'تم إلغاء كلمة السر'});
 });
 
-app.get('/rules',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>قوانين يزن V16</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:650px;margin:auto;min-height:100vh}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.greenCard{background:#022c22;border:2px solid #16a34a;border-radius:16px;padding:16px;margin:10px 0}.btn{border:0;border-radius:12px;padding:16px;width:100%;font-weight:900;margin:8px 0;font-size:14px;cursor:pointer}.green{background:#22c55e;color:#000}.dark{background:#1e293b;color:#fff} li{margin:8px 0;line-height:1.6}</style></head><body>
-<h1 style="color:#22c55e;text-align:center;margin:10px 0">🔐📜 قوانين يزن V16 📜🔐</h1>
-<h2 style="color:#fbbf24;text-align:center">دخول مرة واحدة + كلمة سر خاصة</h2>
-
-<div class=goldCard>
-<div style="text-align:center"><div style="font-size:32px">🔐📸🏆💬⭐</div><div style="font-size:15px;font-weight:900;color:#fbbf24;margin:8px 0">V16 - نظام الدخول الجديد</div></div>
-<ul style="font-size:12px;color:#fde68a;text-align:right;list-style:none;padding:0">
-<li>✅ 1. الشخص الجديد يسجل مرة واحدة فقط في حياته - اسمه ورقمه ونوع السيارة</li>
-<li>✅ 2. بعد التسجيل، كل مرة يفتح التطبيق يدخل تلقائياً مباشرة بدون أي تسجيل</li>
-<li>✅ 3. لا يوجد كود كل مرة - فقط أول مرة كود 1234 وبعدها دخول تلقائي مدى الحياة</li>
-<li>✅ 4. يقدر يفعل كلمة سر خاصة فيه من الإعدادات داخل التطبيق (اختياري)</li>
-<li>✅ 5. إذا فعل كلمة السر → المرة الجاية يطلب كلمة السر فقط (4 أرقام) مو تسجيل كامل</li>
-<li>✅ 6. إذا ما فعل كلمة السر → يدخل تلقائياً بدون أي كلمة سر - أسهل شيء</li>
-</ul>
-</div>
-
-<div class=greenCard>
-<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center;margin-bottom:8px">🔐 كلمة السر الخاصة - للراكب والسائق</div>
-<ul style="font-size:12px;color:#bbf7d0;text-align:right;list-style:none;padding:0">
-<li>👤 <b>الراكب:</b> يقدر يفعل كلمة سر لحماية حسابه وطلباته وعنوان بيته - 4 أرقام فقط</li>
-<li>🚕 <b>السائق:</b> يقدر يفعل كلمة سر لحماية رزقه وتقييماته وصوره - 4 أرقام فقط</li>
-<li>🔑 كلمة السر خاصة بكل شخص - كل واحد كلمة سره مختلفة</li>
-<li>🔓 تفعيل اختياري - مو إجباري - من الإعدادات داخل التطبيق</li>
-<li>❓ نسيت كلمة السر؟ اضغط تسجيل خروج وادخل بحساب آخر بنفس الرقم</li>
-</ul>
-</div>
-
-<div class=card>
-<div style="font-size:14px;font-weight:900;color:#fbbf24;text-align:center">📸🏆 لوحة الشرف والصور</div>
-<ul style="font-size:11px;color:#94a3b8;text-align:right">
-<li>• السائق يرفع صورته وصورة سيارته (اختياري)</li>
-<li>• الراكب يقيّم السائق نجوم + تعليق</li>
-<li>• أفضل 3 سائقين يظهرون في لوحة الشرف</li>
-<li>• بطل السنة يحصل مجاني مدى الحياة 💎</li>
-</ul>
-</div>
-
-<div class=card>
-<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center">🚕 قوانين عامة - يزن مشواري اليمن</div>
-<ul style="font-size:11px;color:#cbd5e1;text-align:right">
-<li>• من جمال تعز إلى كل اليمن - تعز، صنعاء، عدن، إب، الحديدة، المكلا</li>
-<li>• الأمان أولاً - سعر يرضي الطرفين إن شاء الله</li>
-<li>• احترام متبادل بين الراكب والسائق</li>
-<li>• أي إساءة - شكوى وحظر فوري</li>
-<li>• يزن وسيط - المسؤولية على الطرفين</li>
-</ul>
-</div>
-
-<div style="background:#000;border:2px solid #22c55e;border-radius:12px;padding:12px;margin:12px 0;text-align:center">
-<div style="color:#22c55e;font-weight:900">✨ V16 جديد - تسجيل مرة واحدة فقط!</div>
-<div style="font-size:11px;color:#94a3b8;margin-top:4px">سجل مرة، ادخل طول عمرك تلقائياً<br>وتقدر تفعل كلمة سر خاصة تحميك 🔐</div>
-</div>
-
-<button class="btn green" onclick="localStorage.setItem('yazan_agreed_rules','yes'); location.href='/'">✅ أوافق على القوانين - توكل على الله - دخول</button>
-<button class="btn dark" onclick="location.href='/'">⬅ رجوع للرئيسية</button>
-
-<div style="text-align:center;color:#334155;font-size:10px;margin-top:20px">يزن V16.2 - دخول مرة واحدة + كلمة سر خاصة - 2025</div>
-</body></html>`));
-app.get('/complaint',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>شكوى</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:14px;max-width:520px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px}.input{background:#020617;border:1px solid #334155;padding:12px;border-radius:10px;color:#fff;width:100%}.btn{border:0;border-radius:12px;padding:14px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><div class=card><h3 style="color:#22c55e;text-align:center">🚨 شكوى</h3><input class=input id=target placeholder="رقم المشتكى عليه"><textarea class=input id=text rows=3 placeholder="شرح"></textarea><button class="btn green" onclick="fetch('/api/complaints',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({targetPhone:target.value,text:text.value,time:Date.now()})}).then(()=>{alert('✅ تم'); location.href='/';})">✅ إرسال</button></div></body></html>`));
-app.get('/awards',(req,res)=>res.send(`<!DOCTYPE html><html dir=rtl lang=ar><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>لوحة الشرف 📸🏆</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:750px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.photoBox{width:60px;height:60px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #fbbf24;overflow:hidden}.photoBox img{width:100%;height:100%;object-fit:cover}.btn{border:0;border-radius:12px;padding:12px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><h1 style="color:#fbbf24;text-align:center">📸🏆 لوحة الشرف بالصور - V16</h1><div id=topDrivers>تحميل...</div><button class="btn green" onclick="location.href='/'">⬅ الرئيسية</button><script>
-function loadTop(){fetch('/api/ratings/drivers').then(r=>r.json()).then(list=>{ document.getElementById('topDrivers').innerHTML=list.map((d,i)=>{ let rank=i===0?'🥇 بطل السنة 💎':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let badge=d.badges.includes('free_life')?'💎 مجاني مدى الحياة':d.badges.includes('legend')?'👑 أسطوري':'🏆 مميز'; let driverPhoto=d.photos?.driverPhoto? '<img src="'+d.photos.driverPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '👤'; let carPhoto=d.photos?.carPhoto? '<img src="'+d.photos.carPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '🚕'; return '<div style="background:#020617;border-radius:12px;padding:12px;margin:8px 0;border:2px solid '+(i===0?'#fbbf24':'#1e293b')+'"><div style="display:flex;gap:10px;align-items:center"><div style="display:flex;gap:6px"><div class=photoBox>'+driverPhoto+'</div><div class=photoBox style="border-color:#16a34a">'+carPhoto+'</div></div><div style=flex:1><b>'+rank+' '+(d.name||d.id)+'</b><br><span style=color:#fbbf24>⭐ '+d.avg.toFixed(2)+' ('+d.count+')</span><br><span style=font-size:11px;color:#22c55e>'+badge+'</span></div></div></div>'; }).join(''); });}
-loadTop();
-<\/script></body></html>`));
-
-function getAdminPageHtml(){
-return `<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><style>
-body{background:#020617;color:#fff;font-family:system-ui;padding:10px;max-width:800px;margin:auto}
-.card{background:#0f172a;border-radius:16px;padding:12px;margin:8px 0;border:1px solid #1e293b}
-.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:12px;margin:8px 0}
-.input{background:#020617;border:1px solid #334155;padding:10px;border-radius:8px;color:#fff;width:100%;margin:4px 0}
-.btn{border:0;padding:10px;border-radius:8px;font-weight:900;color:#fff;margin:4px 0;cursor:pointer;width:100%}
-  let phone=req.body?.phone||'';
-  if(BANNED_IPS.has(ip) || (device&&BANNED_DEVICES.has(device)) || (phone&&BANNED_PHONES.has(phone))) return res.status(403).send('🚫 محظور');
-  next();
-});
-
-app.get('/health',(req,res)=>res.json({status:'V16 ONE-TIME LOGIN + USER PASSWORD', adminPath:SETTINGS.adminPath}));
-app.get('/manifest.json',(req,res)=>res.json({name:"يزن 🔐📸🏆",short_name:"يزن",start_url:"/",display:"standalone",background_color:"#020617",theme_color:"#16a34a"}));
-app.get('/api/settings',(req,res)=>res.json(SETTINGS));
-app.post('/api/settings',(req,res)=>{ SETTINGS={...SETTINGS,...req.body}; res.json(SETTINGS); });
-app.get('/api/users',(req,res)=>res.json(USERS));
-app.get('/api/complaints',(req,res)=>res.json(COMPLAINTS));
-app.post('/api/complaints',(req,res)=>{ let c={...req.body, id:Date.now(), time:Date.now(), status:'new'}; COMPLAINTS.push(c); res.json({ok:true}); });
-app.get('/api/banned',(req,res)=>res.json({ips:[...BANNED_IPS],phones:[...BANNED_PHONES],devices:[...BANNED_DEVICES]}));
-app.post('/api/ban',(req,res)=>{ let {ip,phone,device}=req.body; if(ip) BANNED_IPS.add(ip); if(phone) BANNED_PHONES.add(phone); if(device) BANNED_DEVICES.add(device); res.json({ok:true}); });
-app.get('/api/driver-photos/:phone',(req,res)=>{ let p=DRIVER_PHOTOS.get(req.params.phone); res.json(p||{}); });
-app.post('/api/driver-photos',(req,res)=>{ let {phone, driverPhoto, carPhoto, carModel, carColor}=req.body; if(!phone) return res.status(400).json({error:'phone required'}); DRIVER_PHOTOS.set(phone,{driverPhoto:driverPhoto||'', carPhoto:carPhoto||'', carModel:carModel||'', carColor:carColor||'', updatedAt:Date.now()}); io.emit('driverPhotoUpdate',{phone}); res.json({ok:true}); });
-
-// User password API - كلمة سر خاصة لكل راكب وسائق
-app.get('/api/user-password/:phone',(req,res)=>{ let p=USER_PASSWORDS.get(req.params.phone); if(!p) return res.json({enabled:false}); res.json({enabled:p.enabled, hasPassword:!!p.password}); });
-app.post('/api/user-password/set',(req,res)=>{
-  let {phone, currentPassword, newPassword, enable}=req.body;
-  if(!phone) return res.status(400).json({error:'رقم الجوال مطلوب'});
-  let existing=USER_PASSWORDS.get(phone);
-  if(existing && existing.enabled && existing.password){
-    if(currentPassword!==existing.password) return res.status(403).json({error:'كلمة السر الحالية خطأ'});
-  }
-  if(enable && !newPassword) return res.status(400).json({error:'اكتب كلمة سر جديدة'});
-  if(enable && newPassword && newPassword.length<4) return res.status(400).json({error:'كلمة السر قصيرة جداً - 4 أحرف على الأقل'});
-  
-  USER_PASSWORDS.set(phone,{password:newPassword||'', enabled:!!enable, updatedAt:Date.now(), role:existing?.role||'rider'});
-  res.json({ok:true, enabled:!!enable, message: enable? '✅ تم تفعيل كلمة السر الخاصة بك - المرة الجاية سيطلب كلمة السر فقط' : '✅ تم إلغاء كلمة السر - ستدخل تلقائياً بدون كلمة سر'});
-});
-app.post('/api/user-password/verify',(req,res)=>{
-  let {phone, password}=req.body;
-  if(!phone) return res.status(400).json({error:'رقم الجوال مطلوب'});
-  let existing=USER_PASSWORDS.get(phone);
-  if(!existing || !existing.enabled) return res.json({ok:true, verified:true, message:'لا يوجد كلمة سر - دخول تلقائي'});
-  if(!existing.password) return res.json({ok:true, verified:true});
-  if(password===existing.password) return res.json({ok:true, verified:true});
-  return res.status(403).json({error:'كلمة السر خطأ'});
-});
-
-app.post('/api/register',(req,res)=>{
-  let ip=(req.headers['x-forwarded-for']?.split(',')[0]||req.ip||'').trim();
-  let {phone,deviceId,driverPhoto,carPhoto,carModel,carColor}=req.body;
-  if(BANNED_IPS.has(ip)||BANNED_PHONES.has(phone)||BANNED_DEVICES.has(deviceId)) return res.status(403).json({error:'banned'});
-  let existingUser=USERS.find(u=>u.phone===phone);
-  if(!existingUser) USERS.push({...req.body,ip,time:Date.now()});
-  if(req.body.role==='driver'){
-    if(!DRIVER_RATINGS.has(phone)) DRIVER_RATINGS.set(phone,{totalStars:25, count:5, avg:5.0, comments:[], trips:5, badges:[], freeLife:false, joinDate:Date.now(), name:req.body.name});
-    if(driverPhoto||carPhoto) DRIVER_PHOTOS.set(phone,{driverPhoto:driverPhoto||'',carPhoto:carPhoto||'',carModel:carModel||'',carColor:carColor||'',updatedAt:Date.now()});
-    if(!USER_PASSWORDS.has(phone)) USER_PASSWORDS.set(phone,{password:'', enabled:false, role:'driver'});
-  } else {
-    if(!USER_PASSWORDS.has(phone)) USER_PASSWORDS.set(phone,{password:'', enabled:false, role:'rider'});
-  }
-  res.json({ok:true, isNew:!existingUser});
-});
-
-app.get('/api/ratings/drivers',(req,res)=>{
-  let list=[...DRIVER_RATINGS.entries()].map(([id,data])=>{ let photos=DRIVER_PHOTOS.get(id)||{}; return {id, ...data, photos}; }).sort((a,b)=>b.avg - a.avg || b.count - a.count);
-  if(list.length<3){
-    list=[
-      {id:'777123456', name:'أحمد المظفر', avg:4.92, count:85, trips:85, totalStars:418, badges:['free_life','legend'], freeLife:true, photos:{driverPhoto:'',carPhoto:'',carModel:'كامري 2020',carColor:'أبيض'}, comments:[{stars:5, comment:'ما شاء الله سائق ممتاز، أخلاق عالية وسيارة نظيفة', riderName:'محمد - جمال تعز', time:Date.now()-100000}]},
-      {id:'777234567', name:'محمد جمال', avg:4.85, count:62, trips:62, totalStars:300, badges:['legend'], freeLife:false, photos:{driverPhoto:'',carPhoto:'',carModel:'كورولا 2019',carColor:'فضي'}, comments:[{stars:5, comment:'سائق خلوق وملتزم بالوقت', riderName:'خالد - جمال', time:Date.now()-150000}]},
-      ...list
-    ];
-  }
-  res.json(list);
-});
-app.get('/api/ratings/app',(req,res)=>{
-  if(APP_RATINGS.length===0) APP_RATINGS=[{stars:5, riderName:'راكب من جمال', comment:'يزن أفضل تطبيق', time:Date.now()}];
-  let avg=APP_RATINGS.reduce((s,r)=>s+r.stars,0)/APP_RATINGS.length;
-  res.json({ratings:APP_RATINGS.slice(-100), avg:avg.toFixed(1), count:APP_RATINGS.length||127});
-});
-app.get('/api/awards/yearly',(req,res)=>{
-  if(YEARLY_AWARDS.length===0) YEARLY_AWARDS=[{year:2024, driverId:'777123456', driverName:'أحمد المظفر', avg:4.92, count:85, awardedAt:Date.now()-30*24*60*60*1000, type:'free_life', message:'🏆 بطل 2024'}];
-  res.json(YEARLY_AWARDS);
-});
-app.post('/api/ratings/rate',(req,res)=>{
-  let {driverId, driverStars, appStars, comment, riderPhone, riderName}=req.body;
-  let now=Date.now();
-  if(driverId && driverStars){
-    let existing=DRIVER_RATINGS.get(driverId)||{totalStars:0, count:0, avg:0, comments:[], trips:0, badges:[], freeLife:false, joinDate:now, name:driverId};
-    existing.totalStars+=driverStars; existing.count+=1; existing.avg=existing.totalStars/existing.count; existing.trips+=1;
-    if(comment && comment.trim()){ existing.comments.unshift({stars:driverStars, comment:comment.trim(), riderName:riderName||'راكب', riderPhone, time:now}); if(existing.comments.length>50) existing.comments=existing.comments.slice(0,50); }
-    if(existing.count>=10 && existing.avg>=4.5 && !existing.badges.includes('featured')) existing.badges.push('featured');
-    if(existing.count>=30 && existing.avg>=4.7 && !existing.badges.includes('top')) existing.badges.push('top');
-    if(existing.count>=50 && existing.avg>=4.8 && !existing.badges.includes('legend')) existing.badges.push('legend');
-    if(existing.count>=50 && existing.avg>=4.8){
-      let year=new Date().getFullYear(); let already=YEARLY_AWARDS.find(a=>a.year===year && a.driverId===driverId);
-      if(!already){ let award={year, driverId, driverName:existing.name||driverId, avg:existing.avg, count:existing.count, awardedAt:now, type:'free_life', message:'🏆 بطل '+year+' - مجاني مدى الحياة!'}; YEARLY_AWARDS.push(award); existing.freeLife=true; if(!existing.badges.includes('free_life')) existing.badges.push('free_life'); io.emit('yearlyAward',award); }
-    }
-    DRIVER_RATINGS.set(driverId, existing);
-  }
-  if(appStars) APP_RATINGS.push({stars:appStars, comment, riderPhone, riderName, driverId, time:now});
-  io.emit('newRating',{driverId, driverStars, appStars, comment});
-  res.json({ok:true});
-});
-app.post('/api/ai/pricing',(req,res)=>{ let {from,to}=req.body; if(!from||!to) return res.status(400).json({error:'from to required'}); res.json(aiDynamicPricing(from,to,SETTINGS.basePrice,SETTINGS.pricePerKm)); });
-app.post('/api/admin/change-path',(req,res)=>{
-  let {newPath, password}=req.body;
-  if(SETTINGS.adminPasswordEnabled && SETTINGS.adminPassword){ if(password!==SETTINGS.adminPassword) return res.status(403).json({error:'كلمة السر خطأ'}); }
-  if(!newPath || !newPath.startsWith('/')) return res.status(400).json({error:'الرابط يجب أن يبدأ بـ /'});
-  if(newPath.length<6) return res.status(400).json({error:'الرابط قصير'});
-  let reserved=['/','/mashwari','/driver','/track','/awards','/rules','/complaint','/api','/health','/manifest.json'];
-  if(reserved.includes(newPath) || reserved.some(r=>newPath.startsWith(r+'/'))) return res.status(400).json({error:'محجوز'});
-  let oldPath=SETTINGS.adminPath;
-  SETTINGS.adminPath=newPath;
-  res.json({ok:true, oldPath, newPath, fullUrl:req.protocol+'://'+req.get('host')+newPath, message:'تم تغيير الرابط من '+oldPath+' إلى '+newPath});
-});
-app.post('/api/admin/set-password',(req,res)=>{
-  let {currentPassword, newPassword, enable}=req.body;
-  if(SETTINGS.adminPasswordEnabled && SETTINGS.adminPassword){ if(currentPassword!==SETTINGS.adminPassword) return res.status(403).json({error:'كلمة السر الحالية خطأ'}); }
-  SETTINGS.adminPassword=newPassword||'';
-  SETTINGS.adminPasswordEnabled=!!enable;
-  res.json({ok:true, enabled:SETTINGS.adminPasswordEnabled, message: enable? 'تم تفعيل كلمة السر' : 'تم إلغاء كلمة السر'});
-});
-
-app.get('/rules',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>قوانين يزن V16</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:650px;margin:auto;min-height:100vh}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.greenCard{background:#022c22;border:2px solid #16a34a;border-radius:16px;padding:16px;margin:10px 0}.btn{border:0;border-radius:12px;padding:16px;width:100%;font-weight:900;margin:8px 0;font-size:14px;cursor:pointer}.green{background:#22c55e;color:#000}.dark{background:#1e293b;color:#fff} li{margin:8px 0;line-height:1.6}</style></head><body>
-<h1 style="color:#22c55e;text-align:center;margin:10px 0">🔐📜 قوانين يزن V16 📜🔐</h1>
-<h2 style="color:#fbbf24;text-align:center">دخول مرة واحدة + كلمة سر خاصة</h2>
-
-<div class=goldCard>
-<div style="text-align:center"><div style="font-size:32px">🔐📸🏆💬⭐</div><div style="font-size:15px;font-weight:900;color:#fbbf24;margin:8px 0">V16 - نظام الدخول الجديد</div></div>
-<ul style="font-size:12px;color:#fde68a;text-align:right;list-style:none;padding:0">
-<li>✅ 1. الشخص الجديد يسجل مرة واحدة فقط في حياته - اسمه ورقمه ونوع السيارة</li>
-<li>✅ 2. بعد التسجيل، كل مرة يفتح التطبيق يدخل تلقائياً مباشرة بدون أي تسجيل</li>
-<li>✅ 3. لا يوجد كود كل مرة - فقط أول مرة كود 1234 وبعدها دخول تلقائي مدى الحياة</li>
-<li>✅ 4. يقدر يفعل كلمة سر خاصة فيه من الإعدادات داخل التطبيق (اختياري)</li>
-<li>✅ 5. إذا فعل كلمة السر → المرة الجاية يطلب كلمة السر فقط (4 أرقام) مو تسجيل كامل</li>
-<li>✅ 6. إذا ما فعل كلمة السر → يدخل تلقائياً بدون أي كلمة سر - أسهل شيء</li>
-</ul>
-</div>
-
-<div class=greenCard>
-<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center;margin-bottom:8px">🔐 كلمة السر الخاصة - للراكب والسائق</div>
-<ul style="font-size:12px;color:#bbf7d0;text-align:right;list-style:none;padding:0">
-<li>👤 <b>الراكب:</b> يقدر يفعل كلمة سر لحماية حسابه وطلباته وعنوان بيته - 4 أرقام فقط</li>
-<li>🚕 <b>السائق:</b> يقدر يفعل كلمة سر لحماية رزقه وتقييماته وصوره - 4 أرقام فقط</li>
-<li>🔑 كلمة السر خاصة بكل شخص - كل واحد كلمة سره مختلفة</li>
-<li>🔓 تفعيل اختياري - مو إجباري - من الإعدادات داخل التطبيق</li>
-<li>❓ نسيت كلمة السر؟ اضغط تسجيل خروج وادخل بحساب آخر بنفس الرقم</li>
-</ul>
-</div>
-
-<div class=card>
-<div style="font-size:14px;font-weight:900;color:#fbbf24;text-align:center">📸🏆 لوحة الشرف والصور</div>
-<ul style="font-size:11px;color:#94a3b8;text-align:right">
-<li>• السائق يرفع صورته وصورة سيارته (اختياري)</li>
-<li>• الراكب يقيّم السائق نجوم + تعليق</li>
-<li>• أفضل 3 سائقين يظهرون في لوحة الشرف</li>
-<li>• بطل السنة يحصل مجاني مدى الحياة 💎</li>
-</ul>
-</div>
-
-<div class=card>
-<div style="font-size:14px;font-weight:900;color:#22c55e;text-align:center">🚕 قوانين عامة - يزن مشواري اليمن</div>
-<ul style="font-size:11px;color:#cbd5e1;text-align:right">
-<li>• من جمال تعز إلى كل اليمن - تعز، صنعاء، عدن، إب، الحديدة، المكلا</li>
-<li>• الأمان أولاً - سعر يرضي الطرفين إن شاء الله</li>
-<li>• احترام متبادل بين الراكب والسائق</li>
-<li>• أي إساءة - شكوى وحظر فوري</li>
-<li>• يزن وسيط - المسؤولية على الطرفين</li>
-</ul>
-</div>
-
-<div style="background:#000;border:2px solid #22c55e;border-radius:12px;padding:12px;margin:12px 0;text-align:center">
-<div style="color:#22c55e;font-weight:900">✨ V16 جديد - تسجيل مرة واحدة فقط!</div>
-<div style="font-size:11px;color:#94a3b8;margin-top:4px">سجل مرة، ادخل طول عمرك تلقائياً<br>وتقدر تفعل كلمة سر خاصة تحميك 🔐</div>
-</div>
-
-<button class="btn green" onclick="localStorage.setItem('yazan_agreed_rules','yes'); location.href='/'">✅ أوافق على القوانين - توكل على الله - دخول</button>
-<button class="btn dark" onclick="location.href='/'">⬅ رجوع للرئيسية</button>
-
-<div style="text-align:center;color:#334155;font-size:10px;margin-top:20px">يزن V16.2 - دخول مرة واحدة + كلمة سر خاصة - 2025</div>
-</body></html>`));
+app.get('/rules',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>قوانين يزن</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:650px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.btn{border:0;border-radius:12px;padding:14px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><h1 style="color:#22c55e;text-align:center">📜 قوانين يزن V16 🔐 دخول مرة واحدة + كلمة سر خاصة</h1>
+<div class=goldCard><div style="text-align:center"><div style="font-size:28px">🔐📸🏆💬</div><div style="font-size:14px;font-weight:900;color:#fbbf24">V16 - تسجيل مرة واحدة + كلمة سر خاصة للراكب والسائق</div><div style="font-size:11px;color:#fde68a">• الشخص الجديد يسجل مرة واحدة فقط<br>• بعدها يدخل تلقائياً بدون تسجيل دخول - مباشرة للتطبيق<br>• يقدر يفعل كلمة سر خاصة فيه من الإعدادات<br>• إذا فعل كلمة السر → المرة الجاية يطلب كلمة السر فقط (4 أرقام)<br>• إذا ما فعلها → يدخل تلقائياً بدون أي كلمة سر</div></div></div>
+<div class=card><div style="background:#022c22;border:1px solid #16a34a;border-radius:10px;padding:10px;margin:6px 0;font-size:12px"><div style="color:#22c55e;font-weight:900">🔐 كلمة السر الخاصة - للراكب والسائق:</div><div style="font-size:11px;margin-top:4px">• الراكب: يقدر يفعل كلمة سر لحماية حسابه وطلباته<br>• السائق: يقدر يفعل كلمة سر لحماية رزقه وتقييماته<br>• كلمة السر خاصة بكل شخص - 4 أرقام أو أكثر<br>• تفعيل اختياري من الإعدادات داخل التطبيق</div></div></div>
+<button class="btn green" onclick="localStorage.setItem('yazan_agreed_rules','yes'); location.href='/'">✅ أوافق - توكل على الله</button></body></html>`));
 app.get('/complaint',(req,res)=>res.send(`<html dir=rtl><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>شكوى</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:14px;max-width:520px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px}.input{background:#020617;border:1px solid #334155;padding:12px;border-radius:10px;color:#fff;width:100%}.btn{border:0;border-radius:12px;padding:14px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><div class=card><h3 style="color:#22c55e;text-align:center">🚨 شكوى</h3><input class=input id=target placeholder="رقم المشتكى عليه"><textarea class=input id=text rows=3 placeholder="شرح"></textarea><button class="btn green" onclick="fetch('/api/complaints',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({targetPhone:target.value,text:text.value,time:Date.now()})}).then(()=>{alert('✅ تم'); location.href='/';})">✅ إرسال</button></div></body></html>`));
 app.get('/awards',(req,res)=>res.send(`<!DOCTYPE html><html dir=rtl lang=ar><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><title>لوحة الشرف 📸🏆</title><style>body{margin:0;background:#020617;color:#fff;font-family:system-ui;padding:16px;max-width:750px;margin:auto}.card{background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:16px;margin:10px 0}.goldCard{background:linear-gradient(135deg,#422006,#78350f);border:2px solid #fbbf24;border-radius:16px;padding:16px;margin:10px 0}.photoBox{width:60px;height:60px;border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #fbbf24;overflow:hidden}.photoBox img{width:100%;height:100%;object-fit:cover}.btn{border:0;border-radius:12px;padding:12px;width:100%;font-weight:900;margin:6px 0}.green{background:#22c55e;color:#000}</style></head><body><h1 style="color:#fbbf24;text-align:center">📸🏆 لوحة الشرف بالصور - V16</h1><div id=topDrivers>تحميل...</div><button class="btn green" onclick="location.href='/'">⬅ الرئيسية</button><script>
 function loadTop(){fetch('/api/ratings/drivers').then(r=>r.json()).then(list=>{ document.getElementById('topDrivers').innerHTML=list.map((d,i)=>{ let rank=i===0?'🥇 بطل السنة 💎':i===1?'🥈':i===2?'🥉':(i+1)+'.'; let badge=d.badges.includes('free_life')?'💎 مجاني مدى الحياة':d.badges.includes('legend')?'👑 أسطوري':'🏆 مميز'; let driverPhoto=d.photos?.driverPhoto? '<img src="'+d.photos.driverPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '👤'; let carPhoto=d.photos?.carPhoto? '<img src="'+d.photos.carPhoto+'" style="width:100%;height:100%;object-fit:cover">' : '🚕'; return '<div style="background:#020617;border-radius:12px;padding:12px;margin:8px 0;border:2px solid '+(i===0?'#fbbf24':'#1e293b')+'"><div style="display:flex;gap:10px;align-items:center"><div style="display:flex;gap:6px"><div class=photoBox>'+driverPhoto+'</div><div class=photoBox style="border-color:#16a34a">'+carPhoto+'</div></div><div style=flex:1><b>'+rank+' '+(d.name||d.id)+'</b><br><span style=color:#fbbf24>⭐ '+d.avg.toFixed(2)+' ('+d.count+')</span><br><span style=font-size:11px;color:#22c55e>'+badge+'</span></div></div></div>'; }).join(''); });}
@@ -674,10 +431,44 @@ function logout(){
   location.href='/';
 }
 
-function goRole(r){let a=localStorage.getItem('yazan_agreed_rules'); if(!a){ if(confirm('📜 قوانين يزن V16 🔐\\n• تسجيل مرة واحدة فقط\\n• بعدها دخول تلقائي بدون تسجيل\\n• تقدر تفعل كلمة سر خاصة من داخل التطبيق\\nموافق؟')){ location.href='/rules'; return; } else return; } selectedRole=r; roleCard.style.display='none'; loginCard.style.display='block'; loginTitle.innerText=r==='driver'?'🚕 سائق 🔐 - تسجيل مرة واحدة فقط':'👤 راكب 🔐 - تسجيل مرة واحدة فقط'; driverExtra.style.display=r==='driver'?'block':'none'; loginBtn.className='btn '+(r==='driver'?'driver':'rider');}
-function backRole(){loginCard.style.display='none';roleCard.style.display='block';}
-async function register(){let n=name.value.trim();let p=phone.value.trim();if(n.length<3)return alert('الاسم');if(p.length<7)return alert('الجوال');if(!agreeRules.checked)return alert('وافق على القوانين - تسجيل مرة واحدة');localStorage.setItem('temp_name',n);localStorage.setItem('temp_phone',p);localStorage.setItem('temp_role',selectedRole);localStorage.setItem('temp_driverPhoto',driverPhotoBase64);localStorage.setItem('temp_carPhoto',carPhotoBase64);localStorage.setItem('temp_carModel',carModel?.value||'');localStorage.setItem('temp_carColor',carColor?.value||'');loginCard.style.display='none';codeCard.style.display='block';codePhone.innerText=p;try{await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json','x-device-id':DEVICE_ID},body:JSON.stringify({name:n,phone:p,role:selectedRole,car:carNo?.value||'',deviceId:DEVICE_ID,driverPhoto:driverPhotoBase64,carPhoto:carPhotoBase64,carModel:carModel?.value||'',carColor:carColor?.value||''})});}catch(e){}}
-function verify(){if(code.value.trim()!=='1234'&&code.value.trim()!=='')return alert('جرب 1234');let role=localStorage.getItem('temp_role');let nm=localStorage.getItem('temp_name');let ph=localStorage.getItem('temp_phone');localStorage.setItem('yazan_role',role);localStorage.setItem('yazan_user',JSON.stringify({name:nm,phone:ph,role,deviceId:DEVICE_ID}));localStorage.setItem('yazan_first_time','yes');window.location.href=role==='driver'?'/driver':'/mashwari';}
+
+function goRole(r){
+  selectedRole=r;
+  document.getElementById('roleCard').style.display='none';
+  document.getElementById('loginCard').style.display='block';
+  document.getElementById('loginTitle').innerText=r==='driver'?'🚕 سائق - تسجيل مرة واحدة فقط':'👤 راكب - تسجيل مرة واحدة فقط';
+  document.getElementById('driverExtra').style.display=r==='driver'?'block':'none';
+  document.getElementById('loginBtn').className='btn '+(r==='driver'?'driver':'rider');
+}
+function backRole(){document.getElementById('loginCard').style.display='none'; document.getElementById('roleCard').style.display='block';}
+async function register(){
+  try{
+    let n=document.getElementById('name')?.value?.trim()||'';
+    let p=document.getElementById('phone')?.value?.trim()||'';
+    let agree=document.getElementById('agreeRules')?.checked;
+    if(n.length<3){alert('اكتب اسمك الرباعي'); return;}
+    if(p.length<7){alert('رقم الجوال قصير'); return;}
+    if(!agree){alert('يجب الموافقة على قوانين يزن - علم على المربع'); return;}
+    localStorage.setItem('temp_name',n); localStorage.setItem('temp_phone',p); localStorage.setItem('temp_role',selectedRole);
+    localStorage.setItem('temp_driverPhoto',driverPhotoBase64); localStorage.setItem('temp_carPhoto',carPhotoBase64);
+    localStorage.setItem('temp_carModel',document.getElementById('carModel')?.value||''); 
+    localStorage.setItem('temp_carColor',document.getElementById('carColor')?.value||'');
+    localStorage.setItem('yazan_agreed_rules','yes');
+    document.getElementById('loginCard').style.display='none';
+    document.getElementById('codeCard').style.display='block';
+    document.getElementById('codePhone').innerText=p;
+    fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json','x-device-id':DEVICE_ID},body:JSON.stringify({name:n,phone:p,role:selectedRole,car:document.getElementById('carNo')?.value||'',deviceId:DEVICE_ID,driverPhoto:driverPhotoBase64,carPhoto:carPhotoBase64,carModel:document.getElementById('carModel')?.value||'',carColor:document.getElementById('carColor')?.value||''})}).catch(()=>{});
+  }catch(e){ alert('خطأ: '+e.message); }
+}
+function verify(){
+  let c=document.getElementById('code')?.value?.trim()||'';
+  if(c!=='' && c!=='1234'){alert('الكود خطأ - اكتب 1234'); return;}
+  let role=localStorage.getItem('temp_role'); let nm=localStorage.getItem('temp_name'); let ph=localStorage.getItem('temp_phone');
+  if(!role||!nm||!ph){ alert('انتهت الجلسة'); location.href='/'; return; }
+  localStorage.setItem('yazan_role',role); localStorage.setItem('yazan_user',JSON.stringify({name:nm,phone:ph,role,deviceId:DEVICE_ID})); localStorage.setItem('yazan_first_time','yes'); localStorage.setItem('yazan_agreed_rules','yes');
+  window.location.href=role==='driver'?'/driver':'/mashwari';
+}
+
 <\/script></body></html>`));
 
 function appPage(role){
